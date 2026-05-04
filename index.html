@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartAttend – Dual Portal Attendance System</title>
+  <meta name="description"
+    content="Student & Staff attendance portal with real-time location and photo verification." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=3" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════
+     PAGE 1: LANDING – CHOOSE PORTAL
+═══════════════════════════════════════════ -->
+  <div id="page-landing" class="page active">
+    <div class="landing-bg">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
+      <div class="grid-pattern"></div>
+    </div>
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme" onclick="toggleTheme()">
+      <span class="sun-icon">☀️</span>
+      <span class="moon-icon hidden">🌙</span>
+    </button>
+    <div class="landing-content">
+      <div class="landing-brand">
+        <div class="brand-icon">🎓</div>
+        <h1 class="brand-name">SmartAttend</h1>
+        <p class="brand-tagline">Real-Time Location · Photo Verification · Dual Portal</p>
+      </div>
+      <div class="portal-cards">
+        <!-- Student Portal Card -->
+        <div class="portal-card student-card" onclick="selectPortal('student')">
+          <div class="portal-card-glow student-glow"></div>
+          <div class="portal-icon-wrap student-icon-bg">
+            <span class="portal-icon">👨‍🎓</span>
+          </div>
+          <h2 class="portal-card-title">Student Portal</h2>
+          <p class="portal-card-desc">Mark your own attendance by capturing <strong>5 real-time photos</strong> with
+            live GPS location verification.</p>
+          <ul class="portal-features">
+            <li><span class="feat-dot student-dot"></span>Upload 5 live location photos</li>
+            <li><span class="feat-dot student-dot"></span>GPS coordinates embedded</li>
+            <li><span class="feat-dot student-dot"></span>View personal attendance history</li>
+          </ul>
+          <button class="btn-portal student-btn">Enter as Student <span>→</span></button>
+        </div>
+        <!-- Staff Portal Card -->
+        <div class="portal-card staff-card" onclick="selectPortal('staff')">
+          <div class="portal-card-glow staff-glow"></div>
+          <div class="portal-icon-wrap staff-icon-bg">
+            <span class="portal-icon">👨‍🏫</span>
+          </div>
+          <h2 class="portal-card-title">Staff Portal</h2>
+          <p class="portal-card-desc">View student-submitted photos, verify attendance, manage records and generate
+            class reports.</p>
+          <ul class="portal-features">
+            <li><span class="feat-dot staff-dot"></span>View all student photos per session</li>
+            <li><span class="feat-dot staff-dot"></span>Verify & approve attendance</li>
+            <li><span class="feat-dot staff-dot"></span>Export attendance reports</li>
+          </ul>
+          <button class="btn-portal staff-btn">Enter as Staff <span>→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+     PAGE 2: STUDENT LOGIN
+═══════════════════════════════════════════ -->
+  <div id="page-student-login" class="page auth-page">
+    <div class="auth-bg student-auth-bg">
+      <div class="orb orb1 student-orb1"></div>
+      <div class="orb orb2 student-orb2"></div>
+    </div>
+    <div class="auth-card glass">
+      <button class="back-btn" onclick="goLanding()">← Back</button>
+      <div class="auth-header">
+        <div class="auth-icon student-icon-bg">👨‍🎓</div>
+        <h2>Student Login</h2>
+        <p>Enter your credentials to access the attendance portal</p>
+      </div>
+      <form onsubmit="loginStudent(event)" class="auth-form">
+        <div class="form-group">
+          <label>Roll Number</label>
+          <div class="input-wrap"><span>🎫</span><input type="text" id="s-roll" placeholder="e.g. CS2024001" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap"><span>🔒</span><input type="password" id="s-pass" placeholder="Your password"
+              required /></div>
+        </div>
+        <p id="s-err" class="auth-error hidden">Invalid roll number or password</p>
+        <button type="submit" class="btn-portal student-btn full-btn">Sign In as Student →</button>
+      </form>
+      <p class="auth-hint">Demo: Roll <strong>CS2024001</strong> · Password <strong>student123</strong></p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+     PAGE 3: STAFF LOGIN
+═══════════════════════════════════════════ -->
+  <div id="page-staff-login" class="page auth-page">
+    <div class="auth-bg staff-auth-bg">
+      <div class="orb orb1 staff-orb1"></div>
+      <div class="orb orb2 staff-orb2"></div>
+    </div>
+    <div class="auth-card glass">
+      <button class="back-btn" onclick="goLanding()">← Back</button>
+      <div class="auth-header">
+        <div class="auth-icon staff-icon-bg">👨‍🏫</div>
+        <h2>Staff Login</h2>
+        <p>Enter your credentials to access the staff dashboard</p>
+      </div>
+      <form onsubmit="loginStaff(event)" class="auth-form">
+        <div class="form-group">
+          <label>Staff ID / Username</label>
+          <div class="input-wrap"><span>👤</span><input type="text" id="t-user" placeholder="e.g. teacher01" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap"><span>🔒</span><input type="password" id="t-pass" placeholder="Your password"
+              required /></div>
+        </div>
+        <p id="t-err" class="auth-error hidden">Invalid username or password</p>
+        <button type="submit" class="btn-portal staff-btn full-btn">Sign In as Staff →</button>
+      </form>
+      <p class="auth-hint">Demo: <strong>admin</strong> / <strong>admin123</strong></p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+     PAGE 4: STUDENT DASHBOARD
+═══════════════════════════════════════════ -->
+  <div id="page-student" class="page dashboard-page">
+    <aside class="sidebar student-sidebar" id="student-sidebar">
+      <div class="sidebar-header">
+        <div class="sb-logo">🎓</div>
+        <div class="sb-brand">SmartAttend</div>
+        <button class="sb-collapse" onclick="toggleSidebar('student-sidebar', 'student-main')">‹</button>
+      </div>
+      <div class="sidebar-user student-sidebar-user">
+        <div class="sb-avatar" id="s-avatar">P</div>
+        <div class="sb-user-info"><span id="s-display-name">Student</span><span id="s-display-roll">—</span></div>
+      </div>
+      <nav class="sb-nav">
+        <button class="sb-navbtn active" onclick="studentSection('mark')" id="snav-mark"><span>📸</span><span
+            class="sb-label">Mark Attendance</span></button>
+        <button class="sb-navbtn" onclick="studentSection('history')" id="snav-history"><span>📋</span><span
+            class="sb-label">My History</span></button>
+        <button class="sb-navbtn" onclick="studentSection('profile')" id="snav-profile"><span>👤</span><span
+            class="sb-label">Profile</span></button>
+      </nav>
+      <div class="sb-footer">
+        <button class="btn-logout" onclick="logoutPortal()">⏻ Logout</button>
+      </div>
+    </aside>
+
+    <main class="dash-main" id="student-main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger" onclick="toggleSidebar('student-sidebar','student-main')">☰</button>
+          <div>
+            <h2 id="s-topbar-title">Mark Attendance</h2>
+            <p class="topbar-date" id="s-topbar-date"></p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="theme-toggle-nav" aria-label="Toggle Theme" onclick="toggleTheme()">
+            <span class="sun-icon">☀️</span>
+            <span class="moon-icon hidden">🌙</span>
+          </button>
+          <div class="loc-chip" id="s-loc-chip"><span class="loc-pulse"></span><span id="s-loc-text">Getting
+              location…</span></div>
+        </div>
+      </header>
+
+      <!-- SECTION: Mark Attendance -->
+      <section id="s-section-mark" class="dash-section active">
+        
+        <div class="today-status-banner" id="today-banner">
+          <div class="banner-icon" id="banner-icon">📸</div>
+          <div class="banner-text">
+            <h3 id="banner-title">Ready to Mark Today's Attendance</h3>
+            <p id="banner-sub">Capture 5 photos from different angles with GPS location</p>
+          </div>
+        </div>
+
+        <!-- 3-Column Attendance Grid -->
+        <!-- Tab Navigation -->
+        <div class="segmented-control" id="attendance-tabs">
+          <button class="seg-btn active" id="tab-btn-present" onclick="switchTab('present')">📸 Present</button>
+          <button class="seg-btn" id="tab-btn-od" onclick="switchTab('od')">💼 On Duty</button>
+          <button class="seg-btn" id="tab-btn-absent" onclick="switchTab('absent')">❌ Absent</button>
+        </div>
+
+        <!-- Attendance Content -->
+        <div class="attendance-grid">
+          
+          <!-- Tab 1: Present (Camera) -->
+          <div class="camera-card tab-content" id="tab-present">
+            <div class="camera-card-header">
+              <h3>📷 Present</h3>
+              <div class="status-pills">
+                <div class="status-pill" id="sp-camera"><span class="pill-dot red-dot"></span><span id="sp-cam-txt">Camera
+                    off</span></div>
+                <div class="status-pill" id="sp-loc"><span class="pill-dot yellow-dot" id="loc-pill-dot"></span><span
+                    id="sp-loc-txt">Fetching GPS…</span></div>
+              </div>
+            </div>
+            <div class="cam-body">
+              <div class="cam-viewport">
+                <video id="s-video" autoplay playsinline muted></video>
+                <canvas id="s-canvas" style="display:none"></canvas>
+                <div class="cam-overlay">
+                  <div class="face-ring"></div>
+                  <div class="cam-corners">
+                    <span class="cc tl"></span><span class="cc tr"></span>
+                    <span class="cc bl"></span><span class="cc br"></span>
+                  </div>
+                </div>
+                <div class="cam-photo-count-badge" id="cam-badge">0/5</div>
+              </div>
+
+              <div class="cam-controls-panel">
+                <div class="photo-progress">
+                  <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+                  </div>
+                  <span id="progress-label">0 of 5 photos captured</span>
+                </div>
+
+                <div class="photo-strip" id="s-photo-strip"></div>
+
+                <div class="location-box" id="s-location-box">
+                  <div class="lb-row lb-address-row">
+                    <span class="lb-icon">📍</span>
+                    <div style="flex:1">
+                      <div class="lb-label">Live Address</div>
+                      <div class="lb-val lb-address" id="s-address">Fetching location…</div>
+                      <input type="text" id="s-manual-addr" placeholder="Edit if inaccurate..." class="f-inp"
+                        style="margin-top: 0.5rem; padding: 0.3rem 0.5rem; font-size: 0.8rem; width: 100%; border-radius: 4px; border: 1px solid var(--border); background: var(--bg3); color: var(--text);" />
+                    </div>
+                  </div>
+                  <div class="lb-row">
+                    <span class="lb-icon">🌐</span>
+                    <div>
+                      <div class="lb-label">GPS Coordinates</div>
+                      <div class="lb-val" id="s-coords">—</div>
+                    </div>
+                  </div>
+                  <div class="lb-row">
+                    <span class="lb-icon">🎯</span>
+                    <div>
+                      <div class="lb-label">Accuracy</div>
+                      <div class="lb-val" id="s-accuracy">—</div>
+                    </div>
+                  </div>
+                  <div class="lb-row">
+                    <span class="lb-icon">🕐</span>
+                    <div>
+                      <div class="lb-label">Timestamp</div>
+                      <div class="lb-val" id="s-timestamp">—</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="cam-btns">
+                  <button class="capture-btn" id="s-capture-btn" onclick="captureStudentPhoto()">
+                    <span class="cap-ring"></span>
+                    <span class="cap-dot"></span>
+                  </button>
+                  <div class="cam-btn-hint">Press <kbd>Space</kbd> to capture</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cam-actions">
+              <button class="btn-start-camera" id="btn-start-cam" onclick="startStudentCamera()">🎥 Start Camera</button>
+              <button class="btn-submit-attendance" id="btn-submit" onclick="submitAttendance()" disabled>✅ Submit Present</button>
+            </div>
+          </div>
+
+          <!-- Tab 2: On Duty -->
+          <div class="form-card tab-content hidden" id="tab-od">
+            <div class="form-card-header od-header">
+              <h3>💼 On Duty</h3>
+            </div>
+            <div class="form-body">
+              <div class="form-group">
+                <label>On Duty Letter (Image/PDF, max 2MB) *</label>
+                <input type="file" id="od-file" class="file-inp" accept=".pdf, image/jpeg, image/png" required />
+                <small class="file-hint">Mandatory proof for On Duty.</small>
+              </div>
+              <div class="form-group">
+                <label>Reason *</label>
+                <textarea id="od-reason" class="f-inp" rows="4" placeholder="Briefly describe your OD reason..." required></textarea>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-submit-attendance" id="btn-submit-od" onclick="submitOD(event)">✅ Submit On Duty</button>
+            </div>
+          </div>
+
+          <!-- Tab 3: Absent -->
+          <div class="form-card tab-content hidden" id="tab-absent">
+            <div class="form-card-header absent-header">
+              <h3>❌ Absent</h3>
+            </div>
+            <div class="form-body">
+              <div class="form-group">
+                <label>Leave Letter (Image/PDF, max 2MB) *</label>
+                <input type="file" id="absent-file" class="file-inp" accept=".pdf, image/jpeg, image/png" required />
+                <small class="file-hint">Mandatory proof for Absence.</small>
+              </div>
+              <div class="form-group">
+                <label>Reason *</label>
+                <textarea id="absent-reason" class="f-inp" rows="4" placeholder="Briefly describe your absence reason..." required></textarea>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-submit-attendance" id="btn-submit-absent" onclick="submitAbsent(event)">✅ Submit Absent</button>
+            </div>
+          </div>
+
+        </div>
+
+
+      </section>
+
+      <!-- SECTION: History -->
+      <section id="s-section-history" class="dash-section">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>📋 My Attendance History</h3>
+          </div>
+          <div id="s-history-content" style="padding:1.2rem"></div>
+        </div>
+      </section>
+
+      <!-- SECTION: Profile -->
+      <section id="s-section-profile" class="dash-section">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>👤 My Profile</h3>
+          </div>
+          <div id="s-profile-content" style="padding:1.5rem"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+     PAGE 5: STAFF DASHBOARD
+═══════════════════════════════════════════ -->
+  <div id="page-staff" class="page dashboard-page">
+    <aside class="sidebar staff-sidebar" id="staff-sidebar">
+      <div class="sidebar-header">
+        <div class="sb-logo">🎓</div>
+        <div class="sb-brand">SmartAttend</div>
+        <button class="sb-collapse" onclick="toggleSidebar('staff-sidebar','staff-main')">‹</button>
+      </div>
+      <div class="sidebar-user staff-sidebar-user">
+        <div class="sb-avatar staff-av">A</div>
+        <div class="sb-user-info"><span>Admin</span><span>Staff</span></div>
+      </div>
+      <nav class="sb-nav">
+        <button class="sb-navbtn active" onclick="staffSection('overview')" id="tnav-overview"><span>📊</span><span
+            class="sb-label">Overview</span></button>
+        <button class="sb-navbtn" onclick="staffSection('photos')" id="tnav-photos"><span>📸</span><span
+            class="sb-label">Student Photos</span></button>
+        <button class="sb-navbtn" onclick="staffSection('records')" id="tnav-records"><span>📋</span><span
+            class="sb-label">Attendance Records</span></button>
+        <button class="sb-navbtn" onclick="staffSection('students')" id="tnav-students"><span>👥</span><span
+            class="sb-label">Manage Students</span></button>
+      </nav>
+      <div class="sb-footer">
+        <button class="btn-logout" onclick="logoutPortal()">⏻ Logout</button>
+      </div>
+    </aside>
+
+    <main class="dash-main" id="staff-main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger" onclick="toggleSidebar('staff-sidebar','staff-main')">☰</button>
+          <div>
+            <h2 id="t-topbar-title">Overview</h2>
+            <p class="topbar-date" id="t-topbar-date"></p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="theme-toggle-nav" aria-label="Toggle Theme" onclick="toggleTheme()">
+            <span class="sun-icon">☀️</span>
+            <span class="moon-icon hidden">🌙</span>
+          </button>
+          <input type="date" id="t-date-filter" class="date-input" onchange="staffRefresh()" />
+          <button class="btn-export" onclick="exportCSV()">⬇ Export</button>
+        </div>
+      </header>
+
+      <!-- SECTION: Overview -->
+      <section id="t-section-overview" class="dash-section active">
+        <div class="stats-grid" id="t-stats-grid"></div>
+        <div class="panel" style="margin-top:1rem">
+          <div class="panel-header">
+            <h3>📅 Today's Attendance Summary</h3>
+            <div class="panel-actions">
+              <input type="text" class="search-inp" id="t-search-overview" placeholder="🔍 Search student…"
+                oninput="renderOverviewTable()" />
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table" id="t-overview-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Roll</th>
+                  <th>Class</th>
+                  <th>Status</th>
+                  <th>Photos</th>
+                  <th>Submitted At</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="t-overview-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: Student Photos -->
+      <section id="t-section-photos" class="dash-section">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>📸 Student Submitted Photos</h3>
+            <div class="panel-actions">
+              <input type="text" class="search-inp" id="t-search-photos" placeholder="🔍 Search student…"
+                oninput="renderPhotosSection()" />
+              <select class="sel-inp" id="t-filter-class" onchange="renderPhotosSection()">
+                <option value="">All Classes</option>
+                <option>CSE-A</option>
+                <option>CSE-B</option>
+                <option>IT-A</option>
+                <option>IT-B</option>
+                <option>ECE</option>
+              </select>
+            </div>
+          </div>
+          <div id="t-photos-content" style="padding:1.2rem"></div>
+        </div>
+      </section>
+
+      <!-- SECTION: Attendance Records -->
+      <section id="t-section-records" class="dash-section">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>📋 Attendance Records</h3>
+            <div class="panel-actions">
+              <select class="sel-inp" id="t-filter-status" onchange="renderRecords()">
+                <option value="">All</option>
+                <option value="present">Present</option>
+                <option value="od">On Duty (OD)</option>
+                <option value="absent">Absent</option>
+                <option value="pending">Pending</option>
+              </select>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Roll</th>
+                  <th>Class</th>
+                  <th>Status</th>
+                  <th>Photos</th>
+                  <th>GPS</th>
+                  <th>Reason</th>
+                  <th>Time</th>
+                  <th>Verified</th>
+                </tr>
+              </thead>
+              <tbody id="t-records-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: Manage Students -->
+      <section id="t-section-students" class="dash-section">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>👥 Manage Students</h3>
+            <div class="panel-actions">
+              <input type="text" class="search-inp" id="t-search-students" placeholder="🔍 Search…"
+                oninput="renderManageStudents()" />
+              <button class="btn-add" onclick="openAddModal()">+ Add Student</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Roll</th>
+                  <th>Name</th>
+                  <th>Class</th>
+                  <th>Contact</th>
+                  <th>Password</th>
+                  <th>Present</th>
+                  <th>Absent</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="t-students-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+     MODAL: VIEW STUDENT PHOTOS (Staff)
+═══════════════════════════════════════════ -->
+  <div class="modal-overlay hidden" id="view-photos-modal">
+    <div class="modal wide-modal">
+      <div class="modal-header">
+        <div>
+          <h3 id="vp-title">📸 Student Photos</h3>
+          <p id="vp-sub" class="modal-sub"></p>
+        </div>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <button class="btn-verify" id="vp-verify-btn" onclick="verifyAttendance()">✅ Verify Present</button>
+          <button class="btn-od" id="vp-od-btn" onclick="verifyOD()" style="display:none; background:var(--primary); color:white; border:none; padding:0.4rem 0.8rem; border-radius:6px; cursor:pointer; font-weight:500;">💼 Approve On Duty</button>
+          <button class="btn-absent" id="vp-absent-btn" onclick="verifyAbsent()" style="display:none; background:var(--danger); color:white; border:none; padding:0.4rem 0.8rem; border-radius:6px; cursor:pointer; font-weight:500;">❌ Approve Absent</button>
+          <button class="btn-reject" id="vp-reject-btn" onclick="rejectAttendance()">❌ Mark Absent</button>
+          <button class="modal-close" onclick="closeModal('view-photos-modal')">✕</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="photo-meta-bar" id="vp-meta"></div>
+        <div class="photos-view-grid" id="vp-photos-grid"></div>
+        
+        <!-- Document Viewer for OD / Absent -->
+        <div id="vp-document-viewer" style="display:none; margin-top: 1rem;">
+          <h4 style="margin-bottom: 0.5rem; color: var(--text);">Attached Document: <span id="vp-doc-name" style="font-weight:normal; color:var(--text-light);"></span></h4>
+          <div id="vp-doc-content" style="border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--bg2); padding: 1rem; text-align: center;">
+            <!-- Image or PDF link will be injected here -->
+          </div>
+        </div>
+
+        <div class="location-timeline" id="vp-location-timeline"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD STUDENT -->
+  <div class="modal-overlay hidden" id="add-student-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>➕ Add Student</h3>
+        <button class="modal-close" onclick="closeModal('add-student-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group"><label>Full Name *</label><input class="f-inp" id="a-name"
+            placeholder="e.g. Priya Sharma" /></div>
+        <div class="form-row-2">
+          <div class="form-group"><label>Roll Number *</label><input class="f-inp" id="a-roll"
+              placeholder="CS2024001" /></div>
+          <div class="form-group"><label>Class</label>
+            <select class="f-inp" id="a-class">
+              <option>CSE-A</option>
+              <option>CSE-B</option>
+              <option>IT-A</option>
+              <option>IT-B</option>
+              <option>ECE</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Contact / Email</label><input class="f-inp" id="a-contact"
+            placeholder="priya@email.com" /></div>
+        <div class="form-group"><label>Student Password</label><input class="f-inp" id="a-pass"
+            placeholder="Set login password" /></div>
+        <div class="modal-actions">
+          <button class="btn-sec" onclick="closeModal('add-student-modal')">Cancel</button>
+          <button class="btn-add" onclick="addStudent()">Add Student</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT STUDENT -->
+  <div class="modal-overlay hidden" id="edit-student-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>✏️ Edit Student</h3>
+        <button class="modal-close" onclick="closeModal('edit-student-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="e-id" />
+        <div class="form-group"><label>Full Name *</label><input class="f-inp" id="e-name" /></div>
+        <div class="form-row-2">
+          <div class="form-group"><label>Roll Number *</label><input class="f-inp" id="e-roll" /></div>
+          <div class="form-group"><label>Class</label>
+            <select class="f-inp" id="e-class">
+              <option>CSE-A</option>
+              <option>CSE-B</option>
+              <option>IT-A</option>
+              <option>IT-B</option>
+              <option>ECE</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Contact / Email</label><input class="f-inp" id="e-contact" /></div>
+        <div class="form-group"><label>Student Password (leave blank to keep)</label><input class="f-inp" id="e-pass" placeholder="New password" /></div>
+        <div class="modal-actions">
+          <button class="btn-sec" onclick="closeModal('edit-student-modal')">Cancel</button>
+          <button class="btn-add" onclick="saveStudentEdit()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js?v=3"></script>
+</body>
+
+</html>
